@@ -1,5 +1,8 @@
-﻿namespace WebApiPractice.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace WebApiPractice.Models
 {
+    [PrimaryKey(nameof(name), nameof(joined))]
     public class Employee
     {
         public string? name { get; set; }
