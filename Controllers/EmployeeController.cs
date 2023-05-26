@@ -33,16 +33,16 @@ namespace WebApiPractice.Controllers
             return await _context.Employees.ToListAsync();
         }
 
-        // GET: api/Employee/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(string id)
+        // GET: api/Employee/{name}
+        [HttpGet("{name}")]
+        public async Task<ActionResult<Employee>> GetEmployee(string name)
         {
             if (_context.Employees == null)
             {
                 return NotFound();
             }
 
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _context.Employees.FindAsync(name);
             if (employee == null)
             {
                 return NotFound();

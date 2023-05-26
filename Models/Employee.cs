@@ -2,7 +2,7 @@
 
 namespace WebApiPractice.Models
 {
-    [PrimaryKey(nameof(name), nameof(joined))]
+    [PrimaryKey(nameof(name))]
     public class Employee
     {
         public string? name { get; set; }
