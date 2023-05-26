@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using WebApiPractice.DTOs;
+using WebApiPractice.Extensions;
 using WebApiPractice.Models;
 
 namespace WebApiPractice.Controllers
@@ -22,14 +25,14 @@ namespace WebApiPractice.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees(int page, int pageSize)
+        public async Task<ActionResult<Page<Employee>>> GetEmployees(int page, int pageSize)
         {
             if (_context.Employees == null)
             {
                 return NotFound();
             }
 
-            return await _context.Employees.ToListAsync();
+            return await _context.Employees.ToPagedAsync(page, pageSize);
         }
 
         [HttpGet("{name}")]
