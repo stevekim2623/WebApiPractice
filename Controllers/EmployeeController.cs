@@ -101,6 +101,12 @@ namespace WebApiPractice.Controllers
                 var actionResult = await ReadJson(stream);
                 return actionResult;
             }
+            else if (extension.ToLower() == ".csv")
+            {
+                Stream stream = file.OpenReadStream();
+                ActionResult actionResult = ReadCSV(stream);
+                return actionResult;
+            }
             else
             {
                 ActionResult actionResult = BadRequest(new { message = "This file has an unsupported file extension." });
@@ -182,6 +188,11 @@ namespace WebApiPractice.Controllers
                 }
             }
 
+            return Created("", null);
+        }
+
+        private ActionResult ReadCSV(Stream stream)
+        {
             return Created("", null);
         }
     }
