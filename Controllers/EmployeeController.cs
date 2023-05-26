@@ -21,9 +21,8 @@ namespace WebApiPractice.Controllers
             _context = context;
         }
 
-        // GET: api/Employee
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees(int page, int pageSize)
         {
             if (_context.Employees == null)
             {
@@ -33,7 +32,6 @@ namespace WebApiPractice.Controllers
             return await _context.Employees.ToListAsync();
         }
 
-        // GET: api/Employee/{name}
         [HttpGet("{name}")]
         public async Task<ActionResult<Employee>> GetEmployee(string name)
         {
@@ -51,7 +49,6 @@ namespace WebApiPractice.Controllers
             return employee;
         }
 
-        // POST: api/Employee
         [HttpPost]
         public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
         {
@@ -80,7 +77,6 @@ namespace WebApiPractice.Controllers
             return CreatedAtAction("GetEmployee", new { id = employee.name }, employee);
         }
 
-        // POST api/Employee/file
         [HttpPost("file")]
         public async Task<ActionResult> PostEmployee(IFormFile file)
         {
