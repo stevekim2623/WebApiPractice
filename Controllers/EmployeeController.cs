@@ -80,6 +80,11 @@ namespace WebApiPractice.Controllers
         [HttpPost("file")]
         public async Task<ActionResult> PostEmployee(IFormFile file)
         {
+            if (_context.Employees == null)
+            {
+                return Problem("Entity set 'EmployeeContext.Employees'  is null.");
+            }
+
             if (!Path.HasExtension(file.FileName))
             {
                 ActionResult actionResult = BadRequest(new { message = "This file has no file extension." });
