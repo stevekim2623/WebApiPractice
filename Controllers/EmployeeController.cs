@@ -52,32 +52,15 @@ namespace WebApiPractice.Controllers
             return employee;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
+        [HttpPost("text")]
+        public async Task<ActionResult> PostEmployee([FromBody] string textarea)
         {
             if (_context.Employees == null)
             {
                 return Problem("Entity set 'EmployeeContext.Employees'  is null.");
             }
 
-            _context.Employees.Add(employee);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (EmployeeExists(employee.name, employee.joined))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetEmployee", new { id = employee.name }, employee);
+            return Created("", null);
         }
 
         [HttpPost("file")]
