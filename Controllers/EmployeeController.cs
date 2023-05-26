@@ -104,7 +104,7 @@ namespace WebApiPractice.Controllers
             else if (extension.ToLower() == ".csv")
             {
                 Stream stream = file.OpenReadStream();
-                ActionResult actionResult = ReadCSV(stream);
+                ActionResult actionResult = await ReadCSV(stream);
                 return actionResult;
             }
             else
@@ -191,8 +191,58 @@ namespace WebApiPractice.Controllers
             return Created("", null);
         }
 
-        private ActionResult ReadCSV(Stream stream)
+        private async Task<ActionResult> ReadCSV(Stream stream)
         {
+            if (stream.Length == 0)
+            {
+                ActionResult actionResult = BadRequest(new { message = "CSV file length is 0" });
+                return actionResult;
+            }
+
+            StringReader stringReader;
+            using (var reader = new StreamReader(stream))
+            {
+                string text = await reader.ReadToEndAsync();
+                stringReader = new StringReader(text);
+            }
+
+            List<Employee> employeesList = new List<Employee>();
+            string? line;
+            while ((line = stringReader.ReadLine()) != null)
+            {
+                string[] items = line.Split(',');
+                if (items.Length != 4)
+                {
+                    continue;
+                }
+
+                Employee emp = new Employee()
+                {
+                    name = items[0].Trim(),
+                    email = items[1].Trim(),
+                    tel = items[2].Trim(),
+                    joined = items[3].Trim(),
+                };
+                employeesList.Add(emp);
+            }
+
+            Employee[] employees = employeesList.ToArray();
+            await _context.Employees.AddRangeAsync(employees);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                return BadRequest(new { message = ex.Message, ActionResult = (ActionResult)EmployeeExists(employees) });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, ActionResult = (ActionResult)EmployeeExists(employees) });
+            }
+
+
             return Created("", null);
         }
     }
